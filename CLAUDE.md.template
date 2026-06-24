@@ -92,6 +92,16 @@
 - For long-running work, checkpoint after each meaningful stage with current goal, delegated tasks, changed files, verification status, unresolved risks, and next action. Resume from checkpoints instead of rediscovering context.
 - For event-style workflows, do not launch downstream agents until required upstream evidence is complete and fresh enough for the task.
 
+## Security & Scanning
+
+These rules are no-ops if Snyk MCP is not configured. They activate automatically once `mcpServers.snyk` is present in `settings.json`.
+
+- Run `snyk_code_scan` on any new first-party code in a Snyk-supported language before declaring work complete.
+- Run `snyk_test` when package manifests change (`package.json`, `requirements.txt`, `*.csproj`, `go.mod`, `Gemfile`, `pom.xml`, etc.).
+- If a scan finds issues: fix using the findings context returned by Snyk, then rescan. Loop until clean.
+- Treat Snyk findings as part of the definition of done. Do not commit or mark a task complete while unresolved high-severity issues remain in new or modified code.
+- Dispatch scan execution to `sonnet-implementer` or `haiku-test-runner` as appropriate; do not run long scans inline in the main context.
+
 ## Red flags (you are doing grunt work — STOP and dispatch):
 - "I'll just read these 5 files quickly" → dispatch to `Explore`
 - "Let me write this function" → dispatch to `general-purpose` with model `sonnet`

@@ -9,6 +9,7 @@ A turnkey replication kit for a cost-aware multi-agent orchestrator setup on Cla
 - `hooks/` — session-start hook that heals the context-mode FTS5 index
 - `settings.json.template` — drop in at `~/.claude/settings.json` and edit paths
 - `CLAUDE.md.template` — drop in at `~/.claude/CLAUDE.md` and customize the lower half
+- Snyk MCP integration (opt-in) — see SETUP.md step 4 for one-command install; gives agents on-demand security scanning (`snyk_code_scan`, `snyk_test`) for new code
 
 ## Quick start
 

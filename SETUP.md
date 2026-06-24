@@ -127,7 +127,57 @@ Now install the plugins. Run these in order so each source is grouped:
 /plugin install csharp-lsp@claude-plugins-official
 ```
 
-### 4. Copy the agent files
+### 4. Install Snyk MCP (security scanning — recommended, opt-in)
+
+We recommend enabling Snyk MCP for any team writing first-party code, but it's optional — skip this step if you don't want it.
+
+**Why:** Snyk MCP gives the orchestrator and sub-agents on-demand tools (`snyk_code_scan`, `snyk_test`, etc.) to scan new code for vulnerabilities — SAST, dependency, container, and IaC — at the time code is written rather than at CI time. The `CLAUDE.md.template` in this repo instructs agents to treat scan results as part of the definition of done.
+
+**Prerequisites:**
+
+```bash
+npm install -g snyk
+```
+
+#### Authenticate with Snyk
+
+Run:
+
+```bash
+snyk auth
+```
+
+This opens your default browser to https://app.snyk.io/login. Options:
+- **Existing account**: sign in (SSO or email/password). If your company uses SSO, click "Continue with SSO" and enter your company's Snyk subdomain.
+- **No account yet**: click "Sign up" for a free account at snyk.io (free tier covers individual + small-team usage).
+
+After successful login the browser will redirect with a "You're authenticated" confirmation. The CLI captures the token automatically; no copy/paste needed.
+
+Verify:
+
+```bash
+snyk whoami
+```
+
+Expected output: your email + the org you have access to. If `whoami` returns 400 or "not authenticated", the token didn't persist — re-run `snyk auth` and complete the browser flow.
+
+**Set your default org** (needed when you have access to multiple orgs and want to default to one — copy your org slug from the Snyk dashboard under Settings → General):
+
+```bash
+snyk config set org=<your-org-slug>
+```
+
+**Register the MCP server** (the canonical way — lets the Snyk CLI keep the entry up to date):
+
+```bash
+npx -y snyk@latest mcp configure --tool=claude-cli
+```
+
+Do NOT hand-write the `mcpServers.snyk` block in `settings.json`; the command above writes it correctly and future `snyk` CLI updates can revise it in place.
+
+**Verify:** restart Claude Code so the new MCP server registers. A fresh session should expose tools prefixed with `snyk_` (e.g., `snyk_code_scan`, `snyk_test`). Confirm that `~/.claude/settings.json` contains a `mcpServers.snyk` entry.
+
+### 5. Copy the agent files
 
 Create the directory if it doesn't exist:
 
@@ -149,11 +199,11 @@ tech-writer.md
 
 Their contents are not reproduced in this document. Open them directly from the repo's `agents/` directory if you want to inspect or tweak before copying.
 
-### 5. Set up the context-mode hook
+### 6. Set up the context-mode hook
 
 The `context-mode-cache-heal.mjs` hook ships with the context-mode plugin installation. Verify it was placed at `~/.claude/hooks/context-mode-cache-heal.mjs` after install; if not, locate it in the plugin's installed files and copy it there. Then confirm the path in your `settings.json` SessionStart hook matches where it actually landed.
 
-### 6. Write your own CLAUDE.md
+### 7. Write your own CLAUDE.md
 
 Copy `CLAUDE.md.template` to `~/.claude/CLAUDE.md`. This file is the behavioral contract for every Claude Code session. The template has two halves:
 
@@ -167,7 +217,7 @@ Optional additions not in the template:
 - A security policy section if you have a security MCP (Snyk, Semgrep, etc.) configured — instruct Claude to run scans on new code.
 - A memory-bank or project-state convention if you want Claude to persist plans/reviews under a known path.
 
-### 7. (Optional) Default to orchestrator mode
+### 8. (Optional) Default to orchestrator mode
 
 To launch Claude Code in orchestrator mode by default rather than having to specify `--agent orchestrator` each time, add a shell alias:
 
@@ -182,7 +232,7 @@ Or set it in your shell profile. Note this makes sense only if you want the orch
 ## Customization Notes
 
 - The seven agents in this repo cover the core roles: exploration, testing, implementation, review, fixes, and documentation. If you have environment-specific deployment pipelines (e.g., a CI system or a release orchestrator), the existing agents are good patterns to follow when writing your own deployment agents.
-- The Snyk section in CLAUDE.md assumes Snyk MCP is configured and the `snyk_code_scan` tool is available. Remove it if you're not using Snyk.
+- The `## Security & Scanning` section in `CLAUDE.md.template` (and the policy you copy to `~/.claude/CLAUDE.md`) activates automatically once `mcpServers.snyk` is present. If you remove Snyk from `settings.json`, remove that section from your `CLAUDE.md` as well — the instructions are no-ops without the MCP, but removing them keeps the file clean.
 - The memory-bank path convention (`.claude/memory-bank/[branch-name]/{plans,reviews,sessions}`) is opinionated. Change it to whatever structure you prefer — it's just a CLAUDE.md instruction, not a plugin convention.
 - The `ecc` marketplace is optional; add it or leave it out as you prefer.
 
