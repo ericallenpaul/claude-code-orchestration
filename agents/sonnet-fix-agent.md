@@ -3,7 +3,7 @@ name: "sonnet-fix-agent"
 description: "Use this agent for bounded follow-up fixes from review feedback, with a narrow write scope and no responsibility beyond the assigned corrections."
 tools: Read, Write, Edit, Glob, Grep, Bash
 category: fix
-model: sonnet-5
+model: claude-sonnet-5
 color: red
 memory: user
 ---

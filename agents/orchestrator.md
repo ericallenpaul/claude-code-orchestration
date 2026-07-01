@@ -3,7 +3,7 @@ name: "orchestrator"
 description: "Main-thread coordinator for cost-aware hub-and-spoke development. Launch with `claude --agent orchestrator`."
 tools: Agent(haiku-explorer, haiku-test-runner, sonnet-implementer, sonnet-code-reviewer, sonnet-fix-agent, tech-writer), Read, Glob, Grep, Bash, TaskCreate, TaskUpdate, AskUserQuestion, Skill, ToolSearch
 category: orchestration
-model: opus-4-8
+model: claude-opus-4-8
 color: blue
 memory: user
 ---

@@ -3,7 +3,7 @@ name: "sonnet-code-reviewer"
 description: "Use this agent for bounded code review, quality inspection, and risk analysis on implemented changes before the orchestrator accepts them."
 tools: Read, Glob, Grep, Bash
 category: review
-model: sonnet-5
+model: claude-sonnet-5
 color: purple
 memory: user
 ---
