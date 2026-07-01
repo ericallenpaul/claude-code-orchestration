@@ -258,11 +258,11 @@ notepad $PROFILE
 
 ```powershell
 function co {
-    claude --agent orchestrator --model claude-opus-4-7 @args
+    claude --agent orchestrator --model opus-4-8 @args
 }
 ```
 
-> **Why pin the model?** The bare `opus` alias resolves to the latest Opus, which is currently Opus 4.8 — a quality/cost regression. The agent frontmatter `model:` does not reliably override the main session model, so pin `claude-opus-4-7` explicitly on the launch command.
+> **Why pin the model?** The agent frontmatter `model:` does not reliably override the main session model, so pin `opus-4-8` explicitly on the launch command.
 
 Save and close.
 
