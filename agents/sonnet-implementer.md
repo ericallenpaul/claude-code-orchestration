@@ -3,7 +3,7 @@ name: "sonnet-implementer"
 description: "Use this agent for bounded implementation work, multi-file edits, refactors, and integration changes within an explicitly assigned write scope."
 tools: Read, Write, Edit, Glob, Grep, Bash
 category: implementation
-model: claude-sonnet-5
+model: claude-sonnet-4-6
 color: orange
 memory: user
 ---
